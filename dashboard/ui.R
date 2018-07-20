@@ -1,29 +1,39 @@
 dashboardPage(
-  skin = "purple",
-  dashboardHeader(title = "Aquaculture Financial Model", titleWidth = 300),
+  dashboardHeader(title = logo_sfg, titleWidth = 300),
   #Sidebar tabs
   dashboardSidebar(
     sidebarMenu(
-   # menuItem("Introduction", tabName = "intro", icon = icon("comment-alt")),
-    menuItem("Model", tabName = "model", icon = icon("signal")),
-    #menuItem("Map", tabName = "map", icon = icon("globe-africa")),
+    menuItem("Introduction", tabName = "intro", icon = icon("sticky-note")),
+    menuItem("Model", tabName = "model", icon = icon("desktop")),
+    menuItem("Map", tabName = "map", icon = icon("globe")),
     menuItem("Parameters", tabName = "param", icon = icon("wrench"))
     )
   ),
     #Body
   dashboardBody(
+    shinyDashboardThemes(theme = "poor_mans_flatly"),
   #Sets up structure for individual tabs  
     tabItems(
       #IntroTab
-      #tabItem(tabName = "intro"),
+      tabItem(tabName = "intro",
+              fluidRow(
+                box(title = 'Overview', solidHeader = TRUE, status = 'primary',
+                    width = 12,
+                    includeMarkdown(path = 'dash-intro.Rmd'))
+              )
+              ),
       #ModelTab
     tabItem(tabName = "model",
               fluidRow(
-                box(plotOutput("financePlot", height = 200))
+                box(plotOutput("financePlot", height = 500, width = 600))
               )
       ),
       #MapTab
-      #tabItem(tabName = "map"),
+      tabItem(tabName = "map",
+              fluidRow(
+                leafletOutput("aquamap")
+              )
+              ),
       #ParamTab
       tabItem(tabName = "param",
               fluidRow(
