@@ -6,7 +6,7 @@ library(sp)
 library(dashboardthemes)
 
 discount = 0.05
-mussels_longline = 5000
+mussels_acre = 10000
 
 coords <- matrix(
   c(-119.4487876,34.354345,

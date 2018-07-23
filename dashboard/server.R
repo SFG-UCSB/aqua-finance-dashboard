@@ -1,8 +1,8 @@
 shinyServer(function(input,output){
   df <- reactive(data.frame(
     year = seq(1:input$years),
-    costs = c(input$op_costs+input$init_costs,rep(input$op_costs, input$years-1)),
-    revenue = rep(as.numeric(input$size) * input$mussPrice * mussels_longline, input$years)) %>%
+    costs = c(input$op_costs+as.numeric(input$init_costs),rep(input$op_costs, input$years-1)),
+    revenue = rep(as.numeric(input$num_acres) * input$mussPrice * mussels_acre, input$years)) %>%
     mutate(NPV = (revenue - costs)/(1+discount)^(year-1),
                           cum_prof = cumsum(NPV)))
   
