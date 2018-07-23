@@ -25,8 +25,28 @@ dashboardPage(
       #ModelTab
     tabItem(tabName = "model",
               fluidRow(
-                box(plotOutput("financePlot", height = 500, width = 600))
-              )
+                box(plotOutput("financePlot", height = 400, width = 475), width = 9),
+                
+                box(sliderInput(
+                  "num_acres",
+                  "How large is the farm?",
+                  value = 50,
+                  min = 10,
+                  max = 100,
+                  step =10
+                ),radioButtons(
+                  "init_costs",
+                  "Level of initial capitalization:",
+                  choiceNames = list("Low", "Medium", "High"),
+                  choiceValues = list(200000,500000,800000),
+                  selected = 500000
+                ),
+                width = 3, offset = 2
+                    )
+              ),
+            fluidRow(
+              box(tableOutput("ledger"))
+            )
       ),
       #MapTab
       tabItem(tabName = "map",
@@ -38,18 +58,11 @@ dashboardPage(
       tabItem(tabName = "param",
               fluidRow(
                 box(
-                  radioButtons(
-                    "init_costs",
-                    "Level of initial capitalization:",
-                    choiceNames = list("Low", "Medium", "High"),
-                    choiceValues = list(35000,75000,150000),
-                    selected = 75000
-                  ),
                   numericInput(
                     "op_costs",
                     "Annual Operational Costs:",
-                    value = 50000,
-                    step = 10000
+                    value = 500000,
+                    step = 50000
                   ),
                   numericInput(
                     "mussPrice",
@@ -57,14 +70,6 @@ dashboardPage(
                     value = round(2.50,2),
                     step = 0.1
                   ),
-                 sliderInput(
-                   "num_acres",
-                   "Size of farm:",
-                   min = 10,
-                   max = 100,
-                   value = 50,
-                   step = 10
-                 ),
                   sliderInput(
                     "years",
                     "Time Horizon:",

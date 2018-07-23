@@ -8,7 +8,7 @@ library(dashboardthemes)
 discount = 0.05
 mussels_acre = 10000
 
-coords <- matrix(
+state_water <- matrix(
   c(-119.4487876,34.354345,
     -119.509735,34.336419,
     -119.428569,34.286472,
@@ -17,9 +17,10 @@ coords <- matrix(
     -119.395774,34.313343),
   ncol = 2, byrow = T)
 
-p = Polygon(coords)
-ps = Polygons(list(p),1)
-sps = SpatialPolygons(list(ps))
+
+sps <- SpatialPolygons(list(
+  Polygons(list(Polygon(state_water)), 1)))
+
 
 logo_sfg <- shinyDashboardLogoDIY(
   
