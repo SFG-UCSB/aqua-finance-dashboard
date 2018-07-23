@@ -9,7 +9,12 @@ shinyServer(function(input,output){
   
   
   output$financePlot <- renderPlot({
-    ggplot(df(), aes(x = year, y = cum_prof))+geom_line()})
+    ggplot(df(), aes(x = year, y = cum_prof))+geom_line() +theme_classic(base_size = 13)+labs(x = "Year", y = "Accumulated NPV")
+    })
+  
+  output$ledger <- renderTable({
+    df()
+  })
   
 
   output$aquamap <- renderLeaflet({
