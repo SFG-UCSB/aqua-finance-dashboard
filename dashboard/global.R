@@ -17,7 +17,6 @@ state_water <- matrix(
     -119.395774,34.313343),
   ncol = 2, byrow = T)
 
-
 sps <- SpatialPolygons(list(
   Polygons(list(Polygon(state_water)), 1)))
 
