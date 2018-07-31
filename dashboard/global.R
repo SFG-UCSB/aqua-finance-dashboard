@@ -6,7 +6,7 @@ library(sp)
 library(dashboardthemes)
 
 discount = 0.05
-mussels_acre = 10000
+
 
 state_water <- matrix(
   c(-119.4487876,34.354345,
@@ -33,3 +33,23 @@ logo_sfg <- shinyDashboardLogoDIY(
   ,badgeBorderRadius = 3
   
 )
+
+
+revenue <- function(numAcres, lb_per_acres = 10000, price_per_lb = NULL){
+  production <- numAcres * lb_per_acres
+  if(!is.null(price_per_lb)){
+    price <- price_per_lb
+  }else{
+    price <- (-1.25/1000000 * production)+2.625
+  }
+  return(production * price)
+}
+
+cost_projection <- function(numAcres, numYears, fixedCap = NULL) {
+  #fixedCap Costs
+  if (is.null(fixedCap)) {
+    #quasi-scaling of costs here lol
+  } else{
+    capital <- fixedCosts
+  }
+}

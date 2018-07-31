@@ -34,12 +34,13 @@ dashboardPage(
                   min = 10,
                   max = 100,
                   step =10
-                ),radioButtons(
-                  "init_costs",
-                  "Level of initial capitalization:",
-                  choiceNames = list("Low", "Medium", "High"),
-                  choiceValues = list(200000,500000,800000),
-                  selected = 500000
+                ),sliderInput(
+                  "years",
+                  "Time Horizon:",
+                  min = 3,
+                  max = 10,
+                  value = 5,
+                  step = 1
                 ),
                 width = 3, offset = 2
                     )
@@ -70,13 +71,12 @@ dashboardPage(
                     value = round(2.50,2),
                     step = 0.1
                   ),
-                  sliderInput(
-                    "years",
-                    "Time Horizon:",
-                    min = 3,
-                    max = 10,
-                    value = 5,
-                    step = 1
+                  radioButtons(
+                    "init_costs",
+                    "Level of initial capitalization:",
+                    choiceNames = list("Low", "Medium", "High"),
+                    choiceValues = list(200000,500000,800000),
+                    selected = 500000
                   )
                 )
               )
