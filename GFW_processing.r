@@ -101,7 +101,7 @@ fishing_effort_map <- ggmap::ggmap(basemap) +
                 ungroup() %>% 
                 filter(fishing_hours > 1),
               aes(x = lon_bin_center, y = lat_bin_center, fill = fishing_hours))+
-  scale_fill_gradientn(colours = pals::parula(100),
+  scale_fill_gradientn(colours = pals::coolwarm(100),
                        "fishing hours",
                        guide = "colourbar",
                        trans = "log",
