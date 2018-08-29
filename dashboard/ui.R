@@ -1,19 +1,18 @@
 dashboardPage(
-  dashboardHeader(title = logo_sfg, titleWidth = 300),
+  #dashboardHeader(title = logo_sfg, titleWidth = 300),
+  dashboardHeader(),
   #Sidebar tabs
   dashboardSidebar(sidebarMenu(
-    menuItem(
-      "Introduction",
-      tabName = "intro",
-      icon = icon("sticky-note")
-    ),
-    menuItem("Model", tabName = "model", icon = icon("desktop")),
-    menuItem("Map", tabName = "map", icon = icon("globe")),
-    menuItem("Parameters", tabName = "param", icon = icon("wrench"))
+    menuItem("Introduction", tabName = "intro", icon = icon("sticky-note")),
+    menuItem("Base Model", tabName = "model", icon = icon("desktop")),
+    menuItem("Additional User Inputs", tabName = "param", icon = icon("wrench")),
+    menuItem("Site Map", tabName = "map", icon = icon("globe"))
   )),
+  
   #Body
   dashboardBody(
-    shinyDashboardThemes(theme = "poor_mans_flatly"),
+    #shinyDashboardThemes(theme = "poor_mans_flatly"),
+    #useShinyjs(),
     #Sets up structure for individual tabs
     tabItems(
       #IntroTab
@@ -26,79 +25,127 @@ dashboardPage(
                   width = 12,
                   includeMarkdown(path = 'dash-intro.Rmd')
                 )
+              ),
+              fluidRow(
+                sliderInput(
+                  "farm_size",
+                  "How large is the farm (acres)?",
+                  value = 50,
+                  min = 10,
+                  max = 100,
+                  step = 5
+                ),
+                sliderInput(
+                  "time_horz",
+                  "Time Horizon (years):",
+                  min = 1,
+                  max = 10,
+                  value = 10,
+                  step = 1
+                ),
+                selectInput(
+                  "species",
+                  "Species select:",
+                  choices = c(
+                    "Finfish" = "ff",
+                    "Shellfish" = "sf",
+                    "Seaweed" = "sw"
+                  )
+                ),
+                numericInput(
+                  "discount",
+                  "Discount rate (%):",
+                  0.05,
+                  0,
+                  1,
+                  0.01
+                )
               )),
       #ModelTab
       tabItem(tabName = "model",
               fluidRow(
-                box(plotOutput(
-                  "financePlot", height = 400, width = 475
-                ), width = 8, title = "Projected Cash Flow"),
-                
-                box(
-                  sliderInput(
-                    "num_acres",
-                    "How large is the farm (acres)?",
-                    value = 50,
-                    min = 10,
-                    max = 100,
-                    step = 5
-                  ),
-                  sliderInput(
-                    "years",
-                    "Time Horizon (years):",
-                    min = 3,
-                    max = 10,
-                    value = 5,
-                    step = 1
-                  ),
-                  width = 4,
-                  offset = 2,
-                  title = "User Inputs"
+                tabBox(
+                  title = "Tabbed Results",
+                  width = 12,
+                  tabPanel("Cash Flows", plotOutput("CashflowPlot")),
+                  tabPanel("NPV", plotOutput("NPVPlot")),
+                  tabPanel("Output Table", tableOutput("ledger"))
                 )
-              )),
+              )
+      ),
+    
+      #newParamTab
+      
+      tabItem(
+        tabName = "param",
+        box(
+          numericInput("units_area",
+                       "Production units per area",
+                       value = 10,
+                       min = 1,
+                       step = 1),
+          numericInput("ind_unit",
+                       "Individuals per unit of production",
+                       value = 10,
+                       min = 1,
+                       step = 1
+                       ),
+          numericInput("init_size",
+                       "Initial size",
+                       value = 1),
+          numericInput("harvest_size",
+                       "Target harvest size",
+                       value = 5),
+          textInput("growth",
+                       "Monthly growth rate",
+                       value = "0.2,0.25,0.33,0.27"),
+          numericInput("death",
+                       "Monthly mortality",
+                       value = 0.02,
+                       min = 0,
+                       max = 1,
+                       step = 0.01),
+          numericInput("sales_price",
+                       "Sales price ($/mass)",
+                       value = 2,
+                       min = 0,
+                       step = 0.1)
+        ),
+        box(
+          numericInput("fixed_init",
+                       "Fixed Initial Capital",
+                       value = 50000,
+                       step = 5000),
+          numericInput("var_init",
+                       "Size Variable Initial Cost (Per Acre)",
+                       value = 1000,
+                       step = 100),
+          ##PER ACRE?
+          numericInput("harv_cost",
+                       "Harvesting Cost",
+                       value = 1000,
+                       step = 100),
+          ##MAKE THIS PER ACRE AS WELL?
+          numericInput("restock_cost",
+                       "Stocking cost",
+                       value = 2000,
+                       step = 500),
+          numericInput("monthly_op",
+                       "Operational Costs (monthly)",
+                       value = 5000,
+                       step = 500),
+          #Turn into percentage of Cap?
+          numericInput("annual_maitenance",
+                       "Annual maitenance cost",
+                       value = 5000,
+                       step = 500)
+        )
+      ), 
+      
+      
       #MapTab
       tabItem(tabName = "map",
-              fluidRow(leafletOutput("aquamap"))),
-      #ParamTab
-      tabItem(tabName = "param",
-              fluidRow(
-              #revenue adjusters  
-                box(title = "Revenue Adjusters",
-                  numericInput(
-                    inputId =
-                      "productivity",
-                    label = "Production (lbs per acre)",
-                    value = 10000,
-                    step = 500
-                  ),
-                    numericInput(
-                      inputId = "sales_price",
-                      label = "Sale Value ($ per lb)",
-                      value = 2.5,
-                      step = 0.05
-                    )
-              ),
-              #cost adjusters
-              box(title = "Expense Adjusters",
-                  numericInput(inputId = "cap_costs",
-                               label = "Initial Fixed Capital Costs ($)",
-                  value = 200000,
-                  step = 25000),
-                  numericInput(inputId = "annual_costs",
-                               label = "Annual Operating Costs($)",
-                               value = 500000,
-                               step = 25000),
-                  numericInput(inputId = "processing_costs",
-                               label = "Post Harvest Production Costs ($)",
-                               value = 100000,
-                               step = 25000)
-                              )
-              ),
-              fluidRow(box(
-                tableOutput("ledger"), collapsible = T, collapsed = T, title = "Financial Summary Table"
-              ))
-              )
+              fluidRow(leafletOutput("aquamap")))
     )
   )
 )
-  

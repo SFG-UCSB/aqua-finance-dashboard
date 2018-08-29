@@ -1,127 +1,11 @@
-#Possible reference if we take this in the direction of mapedit
-#https://www.r-spatial.org/r/2017/06/09/mapedit_0-2-0.html
+#Define things for model testing
 
-#Ian Ladner
-#SFG
-#Aquaculture Financial Dashboard Tool
-#Summer 2018
-
-#load/install req. packages
-library(tidyverse)
-library(shinydashboard)
-library(shiny)
-library(leaflet)
-library(sp)
-library(dashboardthemes)
-library(shinyjs)
-
-####Global Variables####
-
-
-###Helper Functions
-
-harvest_schedule <- function(
-  num_years,
-  init_size,
-  target_size,
-  growth
-){
-  
-  time_horz <- num_years * 12
-  harvest_counter <- 0 
-  size <- init_size
-  
-  for(month_counter in 1:time_horz){
-    m <- month_helper(month_counter)
-    #discrete growth
-    size <- size * (1+growth[m])
-    #check for harvest
-    if(size >= target_size){
-      harvest_counter <- harvest_counter + 1
-      size <- init_size 
-    }
-  }
-  return(harvest_counter)
-}
-
-month_helper <- function(month) {
-  if (month %% 12 == 0)
-    return(12)
-  else
-    return(month %% 12)
-}
-
-annualRates <- function(rateString){
-  rates <- as.numeric(strsplit(rateString,",")[[1]])
-  
-  if(12%%length(rates) != 0){
-    break
-  }
-  
-  rates <- rep(rates, each = (12/length(rates)))
-  return(rates)
-}
+growth_rates <- rnorm(12, mean = 0.3, sd = 0.1)
+#survival <- 0.90 #annual survivability
 
 
 
-
-
-
-#scales an input variable on a range of two values to fit on a range of two other values. Allows for quick interpolation and extrapolation of two given cost points with the assumption of linearity between costs and individual number of acres. For example, if anchor costs for 10 and 50 acres were $1400 and $6500 respectively, scale_helper could help derive the associated linearly scaled cost for anchors on a 34 or 89 acre farm.
-scale_helper <-
-  function(unscaledNumber,
-           unscaledMin,
-           unscaledMax,
-           targetMin,
-           targetMax) {
-    u <- unscaledNumber
-    uMin <- unscaledMin
-    uMax <- unscaledMax
-    tMin <- targetMin
-    tMax <- targetMax
-    
-    return((tMax - tMin) * (u - uMin) / (uMax - uMin) + tMin)
-  }
-
-
-
-####Spatial Prep#############
-state_water <- matrix(
-  c(
-    -119.4487876,
-    34.354345,
-    -119.509735,
-    34.336419,
-    -119.428569,
-    34.286472,
-    -119.3475,
-    34.236466,
-    -119.320165,
-    34.258837,
-    -119.395774,
-    34.313343
-  ),
-  ncol = 2,
-  byrow = T
-)
-
-sps <- SpatialPolygons(list(Polygons(list(
-  Polygon(state_water)
-), 1)))
-
-
-####Implementation of ShinyDashboardThemes (Optional Aesthetic)#######
-
-logo_sfg <- shinyDashboardLogoDIY(
-  boldText = "Aquaculture",
-  mainText = "Financial Model",
-  textSize = 16,
-  badgeText = "SFG",
-  badgeTextColor = "white",
-  badgeTextSize = 2,
-  badgeBackColor = "darkslategrey",
-  badgeBorderRadius = 3
-)
+#actual function
 
 production_model <- function(
   species,
@@ -170,8 +54,6 @@ production_model <- function(
   
   results$Cost[1] <- fixed_init_cost + size_var_init_cost * unit_area + restock_cost
   
-  monthly_growth <- rep(monthly_growth,12)
-  
   
   num_cycles <-
     harvest_schedule(time_horz, init_size, harvest_size, monthly_growth)
@@ -194,8 +76,8 @@ production_model <- function(
     #Growth
     results$Size[m+1] <-
       results$Size[m] * (1 + monthly_growth[ref_month])
-    
-    #Mortality
+   
+     #Mortality
     results$Individuals[m+1] <-
       stock_indiv - stock_indiv * (1 - exp(-monthly_death * stock_counter))
     
@@ -205,7 +87,7 @@ production_model <- function(
     if (results$Size[m+1] > harvest_size) {
       # Update harvest cycle counter
       cycle_counter <- cycle_counter + 1
-      
+    
       results$Harv_Size[m+1]<-results$Size[m+1]
       
       results$Harv_Biomass[m+1]<- results$Size[m+1] * results$Individuals[m+1]
