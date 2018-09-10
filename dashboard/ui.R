@@ -82,7 +82,8 @@ dashboardPage(#dashboardHeader(title = logo_sfg, titleWidth = 300),
           uiOutput("harvest_sizeWidget"),
           uiOutput("growthWidget"),
           uiOutput("deathWidget"),
-          uiOutput("timestepWidget")
+          uiOutput("timestepWidget"),
+          collapsible = TRUE
         ),
         box(
           uiOutput("sales_priceWidget"),
@@ -91,8 +92,10 @@ dashboardPage(#dashboardHeader(title = logo_sfg, titleWidth = 300),
           uiOutput("harv_costWidget"),
           uiOutput("stock_costWidget"),
           uiOutput("op_costsWidget"),
-          uiOutput("annual_costsWidget")
-         )
+          uiOutput("annual_costsWidget"),
+          collapsible = TRUE
+        )
+        
       ),
       
       

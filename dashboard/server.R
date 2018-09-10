@@ -1,14 +1,16 @@
 shinyServer(function(input, output) {
   
   species_index <- reactive({
-    switch(input$species,
+    
+     switch(input$species,
            "ff" = 1,
            "sf" = 2,
-           "sw" = 3)
+           "sw" = 3
+          )
   })
   
-   output$prod_unit_densWidget <- renderUI({
-    numericInput("prod_unit_dens",
+     output$prod_unit_densWidget <- renderUI({
+       numericInput("prod_unit_dens",
                  "Production units per area",
                  value = prod_unit_dens_defaults[species_index()],
                  min = 1,
@@ -119,8 +121,12 @@ shinyServer(function(input, output) {
     )
   })
   
+
+  
+  
   
   run_model <- reactive({
+    
     output <- production_model(
       species = input$species,
       discount = input$discount,
@@ -144,24 +150,50 @@ shinyServer(function(input, output) {
     return(output)
   })
   
+  lapply(c(
+    "prod_unit_densWidget",
+    "stocking_densWidget",
+    "start_sizeWidget",
+    "harvest_sizeWidget",
+    "growthWidget",
+    "deathWidget",
+    "timestepWidget",
+    "sales_priceWidget",
+    "init_fixed_capWidget",
+    "init_var_capWidget",
+    "harv_costWidget",
+    "stock_costWidget",
+    "op_costsWidget",
+    "prod_unit_densWidget",
+    "annual_costsWidget"
+  ),
+  function(x)outputOptions(output, x, suspendWhenHidden = FALSE))
+  
   output$CashflowPlot <- renderPlot({
-    cf <- ggplot(run_model(), aes(x = Timesteps, y = Revenue / 1000)) +
+    
+    req(input$farm_size,input$time_horz, input$species, input$discount, input$prod_unit_dens, input$stocking_dens, input$growth, input$death, input$start_size, input$harvest_size, input$timestep, input$sales_price, input$init_fixed_cap, input$init_var_cap, input$harv_cost, input$stock_cost, input$op_costs, input$annual_costs)
+    
+     cf <- ggplot(run_model(), aes(x = Timesteps, y = Revenue / 1000)) +
       geom_hline(yintercept = 0, linetype = 5) +
       geom_line(size = 1.05, color = "forestgreen") +
       theme_classic(base_size = 14) +
       geom_line(aes(x = Timesteps, y = Cost / 1000),size = 1.05,color = "firebrick3") +
       NULL
     
-    # if (input$timestep == "12") {
-    #   cf <- cf + labs(x = "Month", y = "USD Thousands")
-    # }else if (input$timestep == "52") {
-    #   cf <- cf + labs(x = "Week", y = "USD Thousands")
-    # }
+    if (input$timestep == "12") {
+      cf <- cf + labs(x = "Month", y = "USD Thousands")
+    }else if (input$timestep == "52") {
+      cf <- cf + labs(x = "Week", y = "USD Thousands")
+    }
     cf
-  })
+  }
+  )
   
   
   output$NPVPlot <- renderPlot({
+    
+    req(input$farm_size,input$time_horz, input$species, input$discount, input$prod_unit_dens, input$stocking_dens, input$growth, input$death, input$start_size, input$harvest_size, input$timestep, input$sales_price, input$init_fixed_cap, input$init_var_cap, input$harv_cost, input$stock_cost, input$op_costs, input$annual_costs)
+    
     ggplot(run_model(), aes(x = Timesteps, y = NPV / 1000000)) +
       geom_hline(yintercept = 0, linetype = 5) +
       geom_line(size = 1.05) +
@@ -171,7 +203,9 @@ shinyServer(function(input, output) {
   })
   
   output$ledger <- renderTable({
-    run_model()
+    req(input$farm_size,input$time_horz, input$species, input$discount, input$prod_unit_dens, input$stocking_dens, input$growth, input$death, input$start_size, input$harvest_size, input$timestep, input$sales_price, input$init_fixed_cap, input$init_var_cap, input$harv_cost, input$stock_cost, input$op_costs, input$annual_costs)
+    
+     run_model()
   })
   
   output$aquamap <- renderLeaflet({
@@ -190,17 +224,4 @@ shinyServer(function(input, output) {
       )
     
   })
-  
-  # observeEvent(input$revbutton,{
-  #   show("revInputs")
-  #   hide("revbutton")
-  #   use_user_rev = T
-  # })
-  #
-  # observeEvent(input$costbutton,{
-  #   show("costInputs")
-  #   hide("costbutton")
-  #   use_user_costs = T
-  #
-  # })
 })
