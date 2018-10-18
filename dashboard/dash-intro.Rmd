@@ -1,8 +1,0 @@
----
-title: "dash-intro"
-author: "UCSB - SFG"
-date: "July 20, 2018"
-output: html_document
----
-
-### [Placeholder for introductory .rmd file]

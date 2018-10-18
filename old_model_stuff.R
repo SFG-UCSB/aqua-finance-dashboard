@@ -71,3 +71,69 @@ cost_projection <-
     
     return(costs)
   }
+
+
+####Spatial stuff lifter from dashboard
+
+#globalR
+
+# ####Spatial Prep#############
+#Originally included as a way to visualize the proposed VSE site in state waters. Some thought of adding a rasterized polygon selection input using mapedit but this did not make it into final version of tool.
+
+#Possible reference if we take this in the direction of mapedit
+#https://www.r-spatial.org/r/2017/06/09/mapedit_0-2-0.html
+# state_water <- matrix(
+#   c(
+#     -119.4487876,
+#     34.354345,
+#     -119.509735,
+#     34.336419,
+#     -119.428569,
+#     34.286472,
+#     -119.3475,
+#     34.236466,
+#     -119.320165,
+#     34.258837,
+#     -119.395774,
+#     34.313343
+#   ),
+#   ncol = 2,
+#   byrow = T
+# )
+# 
+# sps <- SpatialPolygons(list(Polygons(list(
+#   Polygon(state_water)
+# ), 1)))
+
+
+
+#ui.R
+#menuItem("Site Map", tabName = "map", icon = icon("globe"))
+
+
+
+#MapTab
+# tabItem(tabName = "map",
+#         fluidRow(
+#           leafletOutput("aquamap")
+#         ))
+
+##server.R
+
+
+# output$aquamap <- renderLeaflet({
+#   leaflet() %>%
+#     setView(lng = -119.4,
+#             lat = 34.286,
+#             zoom = 10) %>%
+#     addProviderTiles(providers$Stamen.Terrain) %>%
+#     addPolygons(
+#       data = sps,
+#       color = "#444444",
+#       weight = 1,
+#       smoothFactor = 0.5,
+#       opacity = 1.0,
+#       fillOpacity = 0.5
+#     )
+#   
+# })

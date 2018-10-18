@@ -1,0 +1,15 @@
+---
+title: "dash-intro"
+author: "UCSB - SFG"
+date: "July 20, 2018"
+output: html_document
+---
+
+Site selection for offshore aquaculture development often occurs in crowded marine spaces and current user groups can be vocal opponents of aquaculture expansion. Therefore, engaging these community stakeholders is a vital step in growing the sector. In discussion with regional aquaculture advocates, the [Sustainable Fisheries Group](http://sfg.msi.ucsb.edu/) (SFG) identified a barrier as the difficulty in clearly communicating the financial prospects of aquaculture was a barrier in engaging with potential stakeholders, especially in terms relative to other economic activities (e.g. fishing). We built this dashboard app to help visualize the magnitude and timeliness of expected cash flows associated with starting an aquaculture farm. Its interactive design gives users the flexibility to configure the model to fit their specifications. SFG's goal is to provide a base platform that can be extended in support of sustainable aquaculture initiatives around the world. We hope to improve the marine planning process by arming stakeholders with clear relevant information relevant to their specific circumstances and help foster a more cohesive coastal economy. 
+
+***
+
+Financial support provided by the [UC Office of the President's Global Food Initiative.](https://www.ucop.edu/global-food-initiative/)
+
+
+<img src="../SFG-logotype-side-ucsb-062513.uc.png" alt="sfg-logo" style = "float:right;width:205px;height:64px;" > 
