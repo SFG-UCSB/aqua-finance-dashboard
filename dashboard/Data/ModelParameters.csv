@@ -1,0 +1,43 @@
+Species,Subset,Paramter,Value,Units,Source
+Finfish,Farm Structure,Production Units ,1,cage/ha.,Bezerra et al. 2015
+Finfish,Farm Structure,Stocking Density,4821,individuals/cage,Bezerra et al. 2015
+Finfish,Biological Parameters,Intial Stocking Size,0.015,kg,Bezerra et al. 2015
+Finfish,Biological Parameters,Minimum Harvest Size,4.2,kg,Bezerra et al. 2015
+Finfish,Biological Parameters,Monthly Growth Rate,0.6,-,Bezerra et al. 2015
+Finfish,Biological Parameters,Insantaneous Mortality Rate,0.0357,-,Bezerra et al. 2015
+Finfish,Revenue,Wholesale Price,9.57,$,Bezerra et al. 2015
+Finfish,Initial Investments,Fixed Captial Costs,730665,$,Bezerra et al. 2015
+Finfish,Initial Investments,Size Variable Capital Costs,35715,$/ha.,Bezerra et al. 2015
+Finfish,Operational Costs,Fixed Monthly Costs,4037,$,Bezerra et al. 2015
+Finfish,Operational Costs,Size Variable Monthly Costs,4572,$/ha.,Bezerra et al. 2015
+Finfish,Operational Costs,Additional Fixed Annual Costs,553625,$,Bezerra et al. 2015
+Finfish,Miscellaneous Costs,Cost of Seed and Stocking,13839,$/ha.,Bezerra et al. 2015
+Finfish,Miscellaneous Costs,Harvesting Cost,2313,$/ha.,Lindell 2017
+Shellfish,Farm Structure,Production Units ,1,longline/ha.,Lester et al. 2018
+Shellfish,Farm Structure,Stocking Density,1299536,individuals/longline,Lester et al. 2018
+Shellfish,Biological Parameters,Intial Stocking Size,0.0008,kg,Lester et al. 2018
+Shellfish,Biological Parameters,Minimum Harvest Size,0.023,kg,Lester et al. 2018
+Shellfish,Biological Parameters,Monthly Growth Rate,0.323,-,Lester et al. 2018
+Shellfish,Biological Parameters,Insantaneous Mortality Rate,0.01,-,"Karayucel & Karayucel, 2000"
+Shellfish,Revenue,Wholesale Price,3.93,$,Lester et al. 2018
+Shellfish,Initial Investments,Fixed Captial Costs,572000,$,Lindell 2017
+Shellfish,Initial Investments,Size Variable Capital Costs,7280,$/ha.,Lindell 2017
+Shellfish,Operational Costs,Fixed Monthly Costs,1300,$,Lindell 2017
+Shellfish,Operational Costs,Size Variable Monthly Costs,730,$/ha.,Lindell 2017
+Shellfish,Operational Costs,Additional Fixed Annual Costs,151840,$,Lindell 2017
+Shellfish,Miscellaneous Costs,Cost of Seed and Stocking,1329,$/ha.,Lindell 2017
+Shellfish,Miscellaneous Costs,Harvesting Cost,2313,$/ha.,Lindell 2017
+Seaweed,Farm Structure,Production Units ,5,longline/ha.,"Watson & Dring, 2011"
+Seaweed,Farm Structure,Stocking Density,100,individuals/longline,"Watson & Dring, 2011"
+Seaweed,Biological Parameters,Intial Stocking Size,1,kg,"Watson & Dring, 2011"
+Seaweed,Biological Parameters,Minimum Harvest Size,7,kg,"Watson & Dring, 2011"
+Seaweed,Biological Parameters,Monthly Growth Rate,"(0.384,0,0,0.384)",-,"Watson & Dring, 2011"
+Seaweed,Biological Parameters,Insantaneous Mortality Rate,0.0075,-,"Watson & Dring, 2011"
+Seaweed,Revenue,Wholesale Price,1.31,$,"Watson & Dring, 2011"
+Seaweed,Initial Investments,Fixed Captial Costs,155326,$,Ladner et al. 2018
+Seaweed,Initial Investments,Size Variable Capital Costs,15809,$/ha.,"Watson & Dring, 2011"
+Seaweed,Operational Costs,Fixed Monthly Costs,1034,$,Ladner et al. 2018
+Seaweed,Operational Costs,Size Variable Monthly Costs,410,$/ha.,Ladner et al. 2018
+Seaweed,Operational Costs,Additional Fixed Annual Costs,62628,$,Ladner et al. 2018
+Seaweed,Miscellaneous Costs,Cost of Seed and Stocking,593,$/ha.,Ladner et al. 2018
+Seaweed,Miscellaneous Costs,Harvesting Cost,308,$/ha.,Ladner et al. 2018

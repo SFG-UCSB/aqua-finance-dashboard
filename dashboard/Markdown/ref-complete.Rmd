@@ -8,53 +8,47 @@ output:
 ---
 This dashboard app was built to help visualize the magnitude and timeliness of expected cash flows associated with starting an aquaculture farm. Its interactive design gives users the flexibility to configure the model to fit their specifications. SFG's goal is to provide a base platform that can be extended in support of sustainable aquaculture initiatives around the world. We hope to improve the marine planning process by arming stakeholders with clear relevant information relevant to their specific circumstances and help foster a more cohesive coastal economy. 
 
-This user reference guide will walk through the structure of the app, the underlying bioeconomic model, and provide further detail on model inputs.   
+This user reference guide will walk through the structure of the app, the underlying bio-economic model, and provide further detail on model inputs.   
 
+#### **Bioeconomic Model and Outputs Tab**
 
+#### User-Defined Farm Inputs
 
-#### **Introduction Tab**
-
-On the introductory launch tab, the user is asked to define four key model parameters:
+On the "Model & Outputs" tab, the user is first asked to define four key model parameters:
 
 * the type of species to model
 * the farm size in hectares
 * an annual discount rate  to apply during the financial forecasting
 * the time duration of the simulation in years
 
-VISUAL PLACEHOLDER
-<center><img src="../Screenshots/coreInputs.PNG" width ="50" height = "20"> </center>
+<center><img src="../Screenshots/coreInputs.PNG" style="max-width:90%"> </center>
 
 Specific holotypes were chosen to serve as the model organism for each species type. They were *Rachycentron canadum* (cobia), *Mytilus edulis* (blue mussel), and *Saccharina latissima* (sugar kelp) for 'finfish', 'shellfish', and 'seaweed' respectively. While the model's default specifications were selected with these species in mind, users can revise internal model parameters on the **Additional User Inputs** tab to match their species of interest. The size of the farm is used to scale the productive biomass as well as the variable initial capital and operational costs. The discount rate (and all other model input rates) take the form of a decimal between 0 and 1 (e.g. '0.05' = 5%).  
 
-
-#### **Bioeconomic Model and Outputs Tab**
 
 #### Model  
 
 At the onset of the simulation, the number of individual organism on the farm is calculated by multiplying the number of hectares in production by the density of grow-out structures and the stocking density of the farmed organism. Grow-out structures such as longlines or net cages are referred to as "production units" in the user interface. This number is multiplied by the starting size of the organisms in kilograms (i.e. the mass of the fingerlings/seed/etc.) to calculate the initial productive biomass of the farm. Once stocked, the model iterates at a monthly time step.  
 
-All organisms develop at a homogeneous rate, however, this growth can be set to be variable throughout the year. Please refer to the "Additional User Inputs Tab" section below for further information. An instantaneous mortality rate is applied to determine the number of surviving individuals after each timestep. At the end of the month, the new individual mass is checked against the minimum harvest size. If larger, the entirety of the farm's biomass is sold at once for a single wholesale price. The farm is then restocked and the next harvest cycle begins. Before the simulation begins, the number of harvest cycles that can be completed in full is calculated. This is done to avoid biasing the financial projections in a situation where a farm could incur the costs of restocking and operating without being able to realize that harvest.
+All organisms develop at a homogeneous rate, however, this growth can be set to be variable throughout the year. Please refer to the "Additional User Inputs Tab" section below for further information. An instantaneous mortality rate is applied to determine the number of surviving individuals after each timestep. At the end of the month, the new individual mass is checked against the minimum harvest size. If it is larger, the entirety of the farm's biomass is sold at once for a single wholesale price. The farm is then restocked and the next harvest cycle begins. Before the simulation begins, the number of harvest cycles that can be completed in full is calculated. This is done to avoid biasing the financial projections in a situation where a farm could incur the costs of restocking and operating without being able to realize that harvest during the specified time horizon.
 
-The initial investment costs are calculated as a combination of fixed and size-variable costs. Fixed costs are assumed to be constant for all farm sizes and may include administrative and vehicle expenditures. Variable costs are scaled relative to teh size of the famr and may include the materials needed for the production units themselves, floats, anchors, and navigational aides. Operational costs are subdivided into fixed and variable monthly ones as well as annual costs that are incurred in the last month of every year. Finally, there are costs associated with harvesting and restocking the farm that are debited every time these activities occur. These expenses are input on a per-hectare basis to scale with the size of the farm. All costs taken from literature/case studies to act as default parameters have been scaled to 2018 USD to reflect [inflation](https://www.bls.gov/data/inflation_calculator.htm).
+The initial investment costs are calculated as a combination of fixed and size-variable costs. Fixed costs are assumed to be constant for all farm sizes and may include administrative and vehicle expenditures. Variable costs are scaled relative to the size of the farm and may include the materials needed for the production units , floats, anchors, and navigational aides. Operational costs are subdivided into fixed and variable monthly ones as well as annual costs that are incurred in the last month of every year. Finally, there are costs associated with harvesting and restocking the farm that are debited every time these activities occur. These expenses are input on a per-hectare basis to scale with the size of the farm. All costs taken from literature/case studies to act as default parameters have been scaled to 2018 USD to reflect [inflation](https://www.bls.gov/data/inflation_calculator.htm).
 
 
 
 #### Output Visuals
 
-On the **Model Outputs** tab, the user can find a collection of summary visuals and statistics categorizing the simulation results. On the top of the pane is a tabbed panel containing a pair of graphs and a data table. 
+On the "Model Outputs" tab, the user can find a collection of summary visuals and statistics categorizing the simulation results. On the top of the pane is a tabbed panel containing a pair of graphs and a data table. 
 
-VISUAL
+<center><img src="../Screenshots/cfPlot.PNG" style="max-width:65%"> </center>
 
-The first graph depicts the magnitude of costs and revenues on a monthly timestep with no discounting. This is intended to give a potential farmer an idea of what their cash flow might look like and allows for comparison to other relevant marine activities (e.g. fishing). The next plot shows the net present value (NPV) of the farm at an annual scope. The net present value is the cumulative profit garnered by farm operations with a user-specified discount rate apply. This allows for easy visual inspection of how certain parameters may affect the "break even time", that is the time where the net present value first surpasses zero and the farmer has recouped their initial investment expenses. Finally, a data table of annual aggregate farm statistics is provided for identification of numeric model outputs.
+The first graph depicts the magnitude of costs and revenues on a monthly timestep with no discounting. This is intended to give a potential farmer an idea of what their cash flow might look like and allows for comparison to other relevant marine activities (e.g. fishing). A slider at the borrom of the plot allows for different windows of time to be examined (in annual increments of 12 months). The next plot shows the net present value (NPV) of the farm at an annual scale. The net present value is the cumulative profit garnered by farm operations with a user-specified discount rate applied. This allows for easy visual inspection of how certain parameters may affect the "break even time", that is the time where the net present value first surpasses zero and the farmer has recouped their initial investment expenses. Finally, a data table of annual aggregate farm statistics is provided for identification of numeric model outputs.
 
-Below this set of plots is a series of boxes that relay key model statistics: the total initial investment, the break even time, and average annual productivity of the farm. The reported initial investment is the sum of the required fixed capital, the scaled per-hectare expenses, and the cost of intitially stocking the farm (number of hectares x the restocking cost (per ha.)).If the farm is profitbale at the end of the simulation, the first month is reported in which the net present value is positive. Else, the user is notified that the NPV < 0 at the time horizon. Finally, the mean total annual production is calculated for the duration of the simualtion.
-
-VISUAL
-
+Alognside this set of plots is a series of boxes that relay key model statistics: the total initial investment, the mean annual profit, the break even time, and average annual productivity of the farm. The reported initial investment is the sum of the required fixed capital, the scaled per-hectare expenses, and the cost of initially stocking the farm (number of hectares x the restocking cost (per ha.)). Annual profit is reported as the mean difference between revenue and expenditures, with no discounting. If the farm is profitable at the end of the simulation, the first month is reported in which the net present value is positive. Else, the user is notified that the NPV < 0 at the time horizon. Finally, the mean total annual production is calculated for the duration of the simulation.
 
 #### **Additional User Inputs Tab**
 
-This tab contains a collection of input widgets for fine-tuning of model paramters to match user specifications.  Normally, these widgets are dynamically populated with default values based upon the species type selection. However, these values are flexible to user input for additiional customization. Model results will update automatically every time a value is changed. This section will walk through the suite of background parameters and how they are incorporated into the bioeconomic model.  
+This tab contains a collection of input widgets for fine-tuning of model parameters to match user specifications.  Normally, these widgets are dynamically populated with default values based upon the species type selection. However, these values are flexible to user input for additional customization. Model results will update automatically every time a value is changed. This section will walk through the suite of background parameters and how they are incorporated into the bio-economic model.  
 
 #### Farm Structure
 
@@ -72,9 +66,11 @@ These variables are used to control the growth cycle as well as the amount of ha
 
 * Minimum Harvest Size- the threshold size for harvesting an individual. This size may be exceeded during a monthly timestep, but all surviving individuals will be harvested at their final size at the end of that month.
 
-* Monthly Growth Rate - the amount of additional biomass an organism gains over a month in the form of a decimal relative to its mass at the beginning of the timestep. The model allows for the input of multiple growth rates to simulate variation throughout the year. All rates must be separated by a comma and the total number inputted must be evenly divisible into 12 months. For example, if a user wanted to simulate growth that tapered to zero across a calendar year, they could input "0.3 , 0.2 , 0.1 , 0" (quotation marks added for clarity).
+* Monthly Growth Rate - the amount of additional biomass an organism gains over a month in the form of a decimal relative to its mass at the beginning of the timestep. The model allows for the input of multiple growth rates to simulate variation throughout the year. All rates must be separated by a comma and the total number inputted must be evenly divisible into 12 months. For example, if a user wanted to simulate growth that tapered to zero across a calendar year, they could input "0.3 , 0.2 , 0.1 , 0" (quotation marks added for clarity, see below for an example).
 
-* Instantaneous Mortality Rate - the continuous rate at which individuals are naturally lost from the population. THe model calculates the number of individuals who survive each month using the following formual:
+<center><img src="../Screenshots/multiGrowth.PNG" style="max-width:50%"> </center>
+
+* Instantaneous Mortality Rate - the continuous rate at which individuals are naturally lost from the population. The model calculates the number of individuals who survive each month using the following formula:
 
   + survivors = individuals at stocking *x* *e*^((mortality rate *x* months since last stocking)^) 
 
@@ -83,15 +79,15 @@ These variables are used to control the growth cycle as well as the amount of ha
 
 The sole revenue generating process for the farm is assumed to be the wholesale of produced biomass.
 
-* Wholesale Price - the price at which all harvested biomassed is sold. The mark is assumed to absorb all the product at a one time at a uniform cost point.  
+* Wholesale Price - the price at which all product is sold. The market is assumed to absorb all the product at a one time at a uniform cost point.  
 
 #### Initial Investments
 
-The start-up costs are binned into two categories: ones that are indepednent of farm size and those that scale with the number units in production. The types of costs that fall into either category will vary by farm and buisness plan.
+The start-up costs are binned into two categories: ones that are independent of farm size and those that scale with the number of units in production. The types of costs that fall into either category will vary by farm and business plan.
 
 * Fixed Capital Costs - constant for all sizes of farm, may include expenses like permitting, purchasing a boat, and environmental assessments. 
 
-* Size Variable Capital Costs - initial start-up costs that scale more directly with farm size.Examples are purchasing and deploying the materials that comprise the production units and other farm infrastrucutre, including lines, anchors, floats, etc.
+* Size Variable Capital Costs - initial start-up costs that scale more directly with farm size.Examples are purchasing and deploying the materials that comprise the production units and other farm infrastructure, including lines, anchors, floats, etc.
 
 #### Operational Costs
 
@@ -101,7 +97,7 @@ The cost of maintaining a farm in production once the initial investment is made
 
 * Size Variable Monthly Costs - directly variable with the farm size (hectares) and may include labor and the cost of feed for fed aquaculture 
 
-* Additional Fixed Annual Costs - less frequent costs that are debited once each year. Examples include maintenance and and insurance. In the model, all of these costs are incurred simultaneously during the final month of the year. 
+* Additional Fixed Annual Costs - less frequent costs that are debited once each year. Examples include maintenance and insurance. In the model, these costs are incurred simultaneously during the final month of the year. 
 
 
 #### Miscellaneous Costs
@@ -110,20 +106,18 @@ These costs are triggered when certain activities take place on the farm, namely
 
 * Cost of seed and restocking - the cost of purchasing/acquiring seed or juveniles to stock the farm and the labor required to do so. The farmer pays these costs once at the beginning of the simulation and then every re-stocking of the farm thereafter. 
 
-* Harvesting Cost - the cost of the labor and materials needed to harvest the farm's biomass once individuals have crossed the minimum harvest size threshold. Paid out at the end of every harvest cycle. 
+* Harvesting Cost - the cost of the labor and materials needed to harvest the farm's biomass once individuals have crossed the minimum harvest size threshold. Also includes any necessary post-harvest processing and packaging. Paid out at the end of every harvest cycle. 
 
 #### **Data Sources**
 
-Bezerra, T.R., Domingues, E.C., Filho, L.F.A.M., rombenso, A.N., Hamilton, S., & Cavalli, R.O, (2015). Economic analysis of cobia (*Rachycnetron canadum*) cage culture in large- and small-scale production systems in Brazil. *Aquaculture International*, **24**, 1-14.DOI: 10.1007/s10499-015-9951-2     
+Bezerra, T.R., Domingues, E.C., Filho, L.F.A.M., Rombenso, A.N., Hamilton, S., & Cavalli, R.O, (2015). Economic analysis of cobia (*Rachycnetron canadum*) cage culture in large- and small-scale production systems in Brazil. *Aquaculture International*, **24**, 1-14.DOI: 10.1007/s10499-015-9951-2     
+
+Karayucel, S. and Karayucel, I. (2000). the effect of environmental factors, depth and position on the growth and mortality of raft-cultured blue mussels (*Mytilus edulis* L.). *Aquaculture Research*, **31**, 893-899. DOI: 10.1046/j.1365-2109.2000.00496.x
 
 Ladner, I., Su, I., Wolfe, S., & Oliver, S. (2018). *Economic feasibility of seaweed aquaculture in Southern California.* (Unpublished master's thesis). University of California Santa Barbara, Santa Barbara, CA.
 
 Lester, S.E., Stevens, J.M., Gentry, R.R., Kappel, C.V., Bell, T.W., Costello, C.J., Gaines, S.D., Kiefer, D.A., Maue, C.C., Simons, R.D., Washburn, L., & White, C. (2018). Marine spatial planing makes rooms for offshore aquaculture in crowded coastal waters. *Nature Communications*, **9**. DOI: 10.1038/s41467-018-03249-1
 
 Lindell, S. (2017). Workshop 6: becoming a VSE shellfish producer. Prepared for the Ventura Shellfish Enterprise. https://vimeo.com/221384151  
-
-National Marine Fisheries Service. (2016). "Annual Commercial Landing Statistics". https://www.st.nmfs.noaa.gov/commercial-fisheries/commercial-landings/annual-landings/index
-
-Nagada Consultants. (2002). Deepwater shellfish aquaculture - an economic profile. Prepared for the *BC Ministry of Sustainable Resource Management*
 
 Watson, L., & Dring, M. (2011). Business plan for the establishment of a seaweed hatchery and grow-out farm. Prepared for the *Irish Sea Fisheries Board.*

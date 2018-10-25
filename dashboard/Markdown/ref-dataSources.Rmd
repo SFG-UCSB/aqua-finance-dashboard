@@ -4,27 +4,16 @@ author: "Ian"
 date: "October 17, 2018"
 output: html_document
 ---
+#### **Data Sources**
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+Bezerra, T.R., Domingues, E.C., Filho, L.F.A.M., Rombenso, A.N., Hamilton, S., & Cavalli, R.O, (2015). Economic analysis of cobia (*Rachycnetron canadum*) cage culture in large- and small-scale production systems in Brazil. *Aquaculture International*, **24**, 1-14.DOI: 10.1007/s10499-015-9951-2     
 
-## R Markdown
+Karayucel, S. and Karayucel, I. (2000). the effect of environmental factors, depth and position on the growth and mortality of raft-cultured blue mussels (*Mytilus edulis* L.). *Aquaculture Research*, **31**, 893-899. DOI: 10.1046/j.1365-2109.2000.00496.x
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+Ladner, I., Su, I., Wolfe, S., & Oliver, S. (2018). *Economic feasibility of seaweed aquaculture in Southern California.* (Unpublished master's thesis). University of California Santa Barbara, Santa Barbara, CA.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+Lester, S.E., Stevens, J.M., Gentry, R.R., Kappel, C.V., Bell, T.W., Costello, C.J., Gaines, S.D., Kiefer, D.A., Maue, C.C., Simons, R.D., Washburn, L., & White, C. (2018). Marine spatial planing makes rooms for offshore aquaculture in crowded coastal waters. *Nature Communications*, **9**. DOI: 10.1038/s41467-018-03249-1
 
-```{r cars}
-summary(cars)
-```
+Lindell, S. (2017). Workshop 6: becoming a VSE shellfish producer. Prepared for the Ventura Shellfish Enterprise. https://vimeo.com/221384151  
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Watson, L., & Dring, M. (2011). Business plan for the establishment of a seaweed hatchery and grow-out farm. Prepared for the *Irish Sea Fisheries Board.*

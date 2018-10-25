@@ -4,27 +4,21 @@ author: "Ian"
 date: "October 17, 2018"
 output: html_document
 ---
+#### **Introduction**
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+This dashboard app was built to help visualize the magnitude and timeliness of expected cash flows associated with starting an aquaculture farm. Its interactive design gives users the flexibility to configure the model to fit their specifications. SFG's goal is to provide a base platform that can be extended in support of sustainable aquaculture initiatives around the world. We hope to improve the marine planning process by arming stakeholders with clear relevant information relevant to their specific circumstances and help foster a more cohesive coastal economy. 
 
-## R Markdown
+This user reference guide will walk through the structure of the app, the underlying bio-economic model, and provide further detail on model inputs.   
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+#### Core Inputs
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+On the "Model & Outputs" tab, the user is first asked to define four key model parameters:
 
-```{r cars}
-summary(cars)
-```
+* the type of species to model
+* the farm size in hectares
+* an annual discount rate  to apply during the financial forecasting
+* the time duration of the simulation in years
 
-## Including Plots
+<center><img src="../Screenshots/coreInputs.PNG" style="max-width:90%"> </center>
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Specific holotypes were chosen to serve as the model organism for each species type. They were *Rachycentron canadum* (cobia), *Mytilus edulis* (blue mussel), and *Saccharina latissima* (sugar kelp) for 'finfish', 'shellfish', and 'seaweed' respectively. While the model's default specifications were selected with these species in mind, users can revise internal model parameters on the "Additional User Inputs" tab to match their species of interest. The size of the farm is used to scale the productive biomass as well as the variable initial capital and operational costs. The discount rate (and all other model input rates) take the form of a decimal between 0 and 1 (e.g. '0.05' = 5%).

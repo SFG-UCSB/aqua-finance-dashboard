@@ -12,7 +12,7 @@ library(leaflet)
 library(sp)
 library(dashboardthemes)
 library(shinyjs)
-library(knitr)
+library(scales)
 
 
 ####Global Variables####
@@ -30,29 +30,26 @@ harvest_size_defaults <- c(4.2,.023,7)
 #discrete growth in percentage per timestep
 growth_defaults <- list("0.6", ".323", "0.384,0,0,0.384")
 #continuous mortality rate (percent of total individuals who die in a timestep)
-death_defaults <- c(0.0357,0.0186, 0)
+death_defaults <- c(0.0357,0.01, 0.0075)
 #Gate price per relevant growth statistics that the farmer recieves
-sales_price_defaults <- c(9.57,3.92,1.31)
+sales_price_defaults <- c(9.57,3.93,1.31)
 #timestep of model. Expressed as number of timesteps in a year
 #timestep_defaults <- c(12,12,52)
 #Initial farm investment that is independent of farm size
-init_fixed_cap_defaults <- c(762676,572000,155326)
+init_fixed_cap_defaults <- c(730665,572000,155326)
 #Inital farm investment that depends on size of farm
-var_cap_defaults <- c(35715,728,15817)
+var_cap_defaults <- c(35715,7280,15809)
 #Cost of harvesting product
-harv_cost_defaults <- c(0,2312,593)
+harv_cost_defaults <- c(2313,2313,593)
 #Cost of seed to stock product
-stock_cost_defaults <- c(13839,1182,308)
-
-#RECOMMENT
-
-#Cost to opperate farm relative to timestep. May Include things like feed for fed aquaculture
-fixed_monthly_costs_defaults <- c(4037,15340,1034)
-var_monthly_costs_defaults <- c(4572,383,1034)
-
+stock_cost_defaults <- c(13839,1329,308)
+#paid out by the farmer every month regardless of the number of hectares under production. Administrative overhead and transit costs can be included here.
+fixed_monthly_costs_defaults <- c(4037,1300,1034)
+#directly variable with the farm size (hectares) and may include labor and the cost of feed for fed aquaculture 
+var_monthly_costs_defaults <- c(4572,730,410)
 #Cost to operate farm on a yearly scale. May include maitenenace, insurance, admin overhead etc.
-annual_costs_defaults <- c(553624,151840,114630)
-
+annual_costs_defaults <- c(553625,151840,62628)
+#the number of timesteps in a year, defaults to 12 (monthly)
 model_timestep = 12
 
 
@@ -186,7 +183,12 @@ production_model <- function(
     Harv_Size = vector(length = num_timesteps+1, mode = "numeric"),
     Harv_Biomass = vector(length = num_timesteps+1, mode = "numeric"),
     Revenue = vector(length = num_timesteps+1, mode = "numeric"),
-    Costs = vector(length = num_timesteps+1, mode = "numeric")
+    Init_Costs = vector(length = num_timesteps+1, mode = "numeric"),
+    Fixed_Monthly_Costs = vector(length = num_timesteps+1, mode = "numeric"),
+    Var_Monthly_Costs = vector(length = num_timesteps+1, mode = "numeric"),
+    Annual_Costs = vector(length = num_timesteps+1, mode = "numeric"),
+    Seed_Stock_Costs = vector(length = num_timesteps+1, mode = "numeric"),
+    Harv_Costs = vector(length = num_timesteps+1, mode = "numeric")
   )
   
   #Converts the annual discount rate to an effective discount rate that is relative to the timestep chosen.
@@ -207,9 +209,9 @@ production_model <- function(
   results$Size[1] <- stock_size
   results$Individuals[1] <- stock_indiv
   
-  init_invest <- fixed_init_cost + var_cap * farm_size + restock_cost*farm_size
+  init_invest <- fixed_init_cost + var_cap * farm_size
   
-  results$Costs[1] <- init_invest
+  results$Init_Costs[1] <- init_invest
   results$Counter[1] <- 0
   
   
@@ -234,6 +236,12 @@ production_model <- function(
     if (cycle_counter > num_cycles)
     {
       break
+    }
+    
+    if(stock_counter == 1){
+      results$Size[i] <- stock_size
+      results$Individuals[i] <- stock_indiv
+      results$Seed_Stock_Costs[i+1] <- restock_cost * farm_size
     }
     
     ref_time <- timestep_helper(i,timestep)
@@ -263,17 +271,11 @@ production_model <- function(
       # label harvest cycle and calculate harvest
       results$Revenue[i+1] <- price * results$Harv_Biomass[i+1]
       
-      results$Costs[i+1] <- results$Costs[i+1] + harv_cost*farm_size
+      results$Harv_Costs[i+1] <- harv_cost*farm_size
       
-      # If harvest cycle counter is still less than or equal to the number of harvest cycles, restock.
+      # If harvest cycle counter is still less than or equal to the number of harvest cycles, reset stock_counter to signal restocking in next timestep.
       if (cycle_counter <= num_cycles) {
         # Restock
-        results$Size[i+1] <- stock_size
-        results$Individuals[i+1] <- stock_indiv
-        
-        results$Costs[i+1] <- results$Costs[i+1] + restock_cost * farm_size
-        
-        # Update stock counter
         stock_counter <- 1
       }
     }
@@ -281,18 +283,20 @@ production_model <- function(
       stock_counter <- stock_counter + 1
     }
     
-    results$Costs[i+1] <- results$Costs[i+1] + fixed_monthly_costs + var_monthly_costs*farm_size
+    results$Fixed_Monthly_Costs[i+1] <- fixed_monthly_costs
+    
+    results$Var_Monthly_Costs[i+1] <- var_monthly_costs*farm_size
     
     if(ref_time == timestep)
     {
-      results$Costs[i+1] <- results$Costs[i+1] + annual_maintenance_cost
+      results$Annual_Costs[i+1] <- annual_maintenance_cost
     }
   }
   
   #After production model looping, calculated: profit, the profit discounted by the effective discount rate, and the NPV
   
   results <- results %>% 
-    mutate(Profit = Revenue - Costs, Disc_Prof = Profit/(1+effective_discount)^Timesteps, NPV = cumsum(Disc_Prof)) %>% gather(Costs, Revenue, key = "Type", value = "Value")
+    mutate(Costs = Init_Costs + Fixed_Monthly_Costs + Var_Monthly_Costs + Annual_Costs + Seed_Stock_Costs + Harv_Costs, Profit = Revenue - Costs, Disc_Prof = Profit/(1+effective_discount)^Timesteps, NPV = cumsum(Disc_Prof))
   
   #Series of auxillairy values to be calculated to inform value boxes on the display of tool 1)inital investment 2)is the NPV >0 at the time horizon, and if so, when does it break even? 3)average annual production 
   
@@ -316,28 +320,38 @@ production_model <- function(
   
 #3) creates a subset of data that is grouped by year including the total summative yield, revenue, and profit. The NPV at the end of each year is also reported. 
   annual_data <- results %>%
-    spread(Type, Value) %>% 
     group_by(Year) %>% 
     summarise(Yield = sum(Harv_Biomass), Revenue = sum(Revenue), Profit = sum(Profit), NPV = last(NPV)) %>% 
     ungroup()
 
-#Mean annual yield is calculated,Year 0, used for the initial investment timestep, is removed for mean calculation purposes 
+#Mean annual yield and profit is calculated,Year 0, used for the initial investment timestep, is removed for mean calculation purposes 
 
   yield = mean(annual_data$Yield[-1])
+  profit = mean(annual_data$Profit[-1])
   
 #Cashflow implementation
   
-  cycle_data <- results %>%
-    spread(Type, Value) %>% 
-    select(Counter, Size, Individuals,Costs,Revenue,Profit)%>% 
-    group_by(Counter) %>% 
-    summarize_all(mean) %>% 
-    filter(Counter != 0) %>% 
-    gather(Costs, Revenue, key = "Type", value = "Value")
+  cashflow_data <- results %>%
+    select(Year,Timesteps,Fixed_Monthly_Costs,Var_Monthly_Costs,Annual_Costs, Seed_Stock_Costs,Harv_Costs, Revenue)
+  
+  colnames(cashflow_data)<- c("Year",
+                              "Timesteps",
+                         "Monthly Fixed Costs",
+                         "Monthly Variable Costs",
+                         "Annual Costs",
+                         "Seeding/Stocking Costs",
+                         "Harvesting Costs",
+                         "Revenue"
+                         )
+  
+    cashflow_data <- cashflow_data %>% 
+      gather(`Monthly Fixed Costs`,`Monthly Variable Costs`,`Annual Costs`,`Seeding/Stocking Costs`,`Harvesting Costs`, Revenue, key = "Type", value = "Value") %>% filter(Year != 0) %>% 
+      mutate(Value = case_when(Type == "Revenue" ~ Value,Type != "Revenue" ~ -Value)) 
+      
     
   
 #returns a list of params used to populate graphs and value boxes in UI
   
   
-  return(list(results = results, annual_data = annual_data, init_invest = init_invest, isProfitable = profitable, breakeven = breakeven, phrase = phrase, yield = yield, cycle_data = cycle_data))
+  return(list(results = results, annual_data = annual_data, init_invest = init_invest, isProfitable = profitable, breakeven = breakeven, phrase = phrase, yield = yield, profit = profit, cashflow_data = cashflow_data))
 } 

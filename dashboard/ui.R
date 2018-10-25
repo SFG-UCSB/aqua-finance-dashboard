@@ -2,7 +2,7 @@
 
 
 
-dashboardPage(title = "Aquaculture Financial Tool",
+dashboardPage(title = "Aquaculture Financial Tool", skin = "purple",
               dashboardHeader(title = "Aquaculture Planning Financial Tool", titleWidth = 350),
               #dashboardHeader(),
               #Sidebar tabs
@@ -78,14 +78,24 @@ dashboardPage(title = "Aquaculture Financial Tool",
                           fluidRow(
                             tabBox(
                               width = 9,
-                              tabPanel("Harvest Cycle Cash Flows", plotOutput("CFPlot")),
                               tabPanel("Payback Period", plotOutput("NPVPlot")),
-                              tabPanel("Output Table", tableOutput("ledger")),
+                              tabPanel("Annual Cash Flows", 
+                                       fluidRow(
+                                         box(width = 12,
+                                             plotOutput("CFPlot"),
+                                             column(width = 4, offset = 4,
+                                                    uiOutput("time_sliderWidget")
+                                             ),
+                                             footer = "*Use the slider to vary the number of months displayed")
+                                       )
+                              ),
+                              #tabPanel("Output Table", tableOutput("ledger")),
                               tabPanel("Annual Data Table", tableOutput("annum"))
                             ),
                             #Additionally, there are three `value boxes` that display three critical model results for stakeholders: 1) The initial capital required to start the farm 2) If the farm is profitable at the end of the time horizon, the timestep during which the farm first breaks even is listed and 3) the average annual yield of product produced
                             fluidRow(
                               valueBoxOutput("init_invest_box", width = 3),
+                              valueBoxOutput("profit_box", width = 3),
                               valueBoxOutput("breakeven_box", width = 3),
                               valueBoxOutput("production_box", width = 3)
                             )
@@ -98,7 +108,7 @@ dashboardPage(title = "Aquaculture Financial Tool",
                     tabName = "param",
                     fluidRow(
                       box(width = 12,
-                          "Please see the 'User Reference Guide' tab on the left for further information about these model inputs.", background = "navy")
+                          "Please see the 'User Reference Guide' tab on the left for further information about these model inputs.", background = "purple")
                     ),
                     fluidRow(
                       box(title = "Farm Structure ", width = 12, solidHeader = TRUE,
@@ -174,12 +184,21 @@ dashboardPage(title = "Aquaculture Financial Tool",
                       tabBox(
                         title = "User Reference Guide",
                         width = 12,
-                        tabPanel("Introduction", includeMarkdown("Markdown/ref-complete.Rmd")),
-                        tabPanel("Model & Outputs", includeMarkdown("Markdown/ref-intro.Rmd")),
-                        tabPanel("Additional User Inputs", includeMarkdown("Markdown/ref-intro.Rmd")),
+                        tabPanel("Intro & Core Inputs", includeMarkdown("Markdown/ref-intro.Rmd")),
+                        tabPanel("Model & Outputs", includeMarkdown("Markdown/ref-model.Rmd")),
+                        tabPanel("Additional User Inputs", includeMarkdown("Markdown/ref-addInputs.Rmd")),
                         tabPanel("Data Sources", 
-                                 includeMarkdown("Markdown/ref-intro.Rmd"),
-                                 downloadButton("parameters", "Download Paramter Values"))
+                                 includeMarkdown("Markdown/ref-dataSources.Rmd"),
+                                 hr(),
+                                 downloadButton("parameters", "Download .csv File with Default Parameter Values"))
+                        # ,
+                        # tabPanel("renderTest",
+                        #          fluidRow(
+                        #            #box(
+                        #              uiOutput("render")
+                        #            #)
+                        #          ))
+                        
                       )
                     )
                   )

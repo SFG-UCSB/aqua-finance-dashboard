@@ -91,7 +91,7 @@ shinyServer(function(input, output) {
   output$var_capWidget <- renderUI({
     numericInput(
       "var_cap",
-      "Size Variable Capital Costs",
+      "Size Variable Capital Costs (per hectare)",
       value = var_cap_defaults[species_index()],
       step = 100
     )
@@ -192,25 +192,62 @@ shinyServer(function(input, output) {
   function(x)outputOptions(output, x, suspendWhenHidden = FALSE))
 
   output$CFPlot <- renderPlot({
-    ggplot(run_model()$cycle_data, aes(x = as.factor(Counter), y = Value/1000, fill = Type)) +
-      geom_bar(stat= "identity", position = position_dodge())+
+    
+    req(input$time_window)
+    
+    ggplot()+geom_bar(data = filter(run_model()$cashflow_data, Year %in% 1:(input$time_window/12), Value < 0),aes(x = Timesteps, y = Value/1000, fill = Type), stat = "identity", position = position_stack())+
+      geom_bar(data = filter(run_model()$cashflow_data, Year %in% 1:(input$time_window/12), Value >= 0), aes(x = Timesteps, y = Value/1000, fill = Type),stat= "identity", position = position_stack())+
+      geom_hline(yintercept = 0, linetype = "longdash", size = .6) +
       theme_minimal(base_size = 15)+
+      labs(x = "Months*", y = "USD Thousands", fill = "Flow Type")+
+      scale_x_continuous(breaks = pretty_breaks())+
+      scale_fill_manual(values = 
+                          #colorbrewer
+                          #c("#e6ab02","#e7298a","#1b9e77","#66a61e","#7570b3", "#d95f02")
+                          #paul tol
+                        rev(c("#CC6677","#117733","#332288", "#DDCC77","#88CCEE","#9129c5"))
+                        #rainbow_hcl from Learning R  
+                        #rainbow_hcl(6, start = 30, end = 270)
+                          #colorbrewer2
+                         #rev(brewer.pal(6, "Paired"))
+                        )+
+      theme(legend.position = "right")+
       NULL
   }
   )
   
+  output$time_sliderWidget <- renderUI({
+    sliderInput(
+      "time_window",
+      "",
+      value = 12,
+      min = 12,
+      max = input$time_horz*12,
+      step = 12
+    )
+  })
+  
   output$NPVPlot <- renderPlot({
-     ggplot(run_model()$annual_data, aes(x = Year, y = NPV / 1000000)) +
+    ggplot(run_model()$annual_data, aes(x = Year, y = NPV / 1000000)) +
       geom_hline(yintercept = 0, linetype = 5) +
       geom_line(size = 1.05) +
       theme_classic(base_size = 15) +
       labs(x = "Year", y = "USD Millions")+
-            NULL
+      NULL
   })
-  
-  output$ledger <- renderTable({
-     run_model()$cycle_data
-  })
+
+  #  output$NPVPlot <- renderPlot({
+  #     ggplot(run_model()$results, aes(x = Timesteps, y = NPV / 1000000)) +
+  #      geom_hline(yintercept = 0, linetype = 5) +
+  #      geom_line(size = 1.05) +
+  #      theme_classic(base_size = 15) +
+  #      labs(x = "Month", y = "USD Millions")+
+  #            NULL
+  # })
+  # 
+  # output$ledger <- renderTable({
+  #    run_model()$results
+  #   })
   
   output$annum <- renderTable({
     run_model()$annual_data
@@ -224,34 +261,55 @@ shinyServer(function(input, output) {
       icon = icon("money"))
   })
   
+  output$profit_box <- renderValueBox({
+      
+    valueBox(
+      value = paste0("$",prettyNum(round(run_model()$profit,-3), big.mark = ",")), 
+      subtitle = "Avgerage Annual Profit", 
+      icon = icon("bar-chart"),
+      color = ifelse(run_model()$profit > 0, "olive","red")
+      )
+  })
+  
   output$breakeven_box <- renderValueBox({
     if(run_model()$isProfitable){
-    valueBox(
+      valueBox(
       value = paste(run_model()$breakeven,run_model()$phrase), 
       subtitle = "Payback Period", 
       color = "olive",
       icon = icon("calendar"))
-    }else{
-      valueBox(
-        value = "NPV < 0", 
-        subtitle = "at Time Horizon", 
-        color = "red",
-        icon = icon("calendar"))
     }
-  })
+    else{
+      valueBox(
+      value = "Not Profitable", 
+      subtitle = "over Time Horizon", 
+      color = "red",
+      icon = icon("calendar"))
+    }
+    })
   
   output$production_box <- renderValueBox({
     valueBox(
       value = paste(prettyNum(round(run_model()$yield,-3), big.mark = ","), "kg"), 
       subtitle = "Avgerage Annual Yield", 
       color = "olive",
-      icon = icon("spoon"))
+      icon = icon("leaf"))
   })
   
   output$parameters <- downloadHandler(
     filename = "parameters.csv",
     content = function(file) {
-      write_csv(runModel()$annual_data, file, row.names = FALSE)
+      write_csv(read_csv("Data/ModelParameters.csv"), file)
     }
   )
+  
+  # output$render <- renderUI({
+  #   
+  #   tempReport <- tempfile(fileext = ".rmd")
+  #   file.copy("Markdown/ref-intro.Rmd", tempReport, overwrite = TRUE)
+  #   report_type <- "html_fragment"
+  #   tempReport <- "Markdown/ref-intro.Rmd"
+  #   rmarkdown::render(tempReport,report_type)
+  #   includeHTML(gsub(".rmd",".html",tempReport))
+  # })
 })
