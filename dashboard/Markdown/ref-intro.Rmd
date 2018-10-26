@@ -19,6 +19,8 @@ On the "Model & Outputs" tab, the user is first asked to define four key model p
 * an annual discount rate  to apply during the financial forecasting
 * the time duration of the simulation in years
 
-<center><img src="../Screenshots/coreInputs.PNG" style="max-width:90%"> </center>
+<br>
+<center><img src="../Screenshots/coreInputs.PNG" style="max-width:85%"> </center>
+<br>
 
 Specific holotypes were chosen to serve as the model organism for each species type. They were *Rachycentron canadum* (cobia), *Mytilus edulis* (blue mussel), and *Saccharina latissima* (sugar kelp) for 'finfish', 'shellfish', and 'seaweed' respectively. While the model's default specifications were selected with these species in mind, users can revise internal model parameters on the "Additional User Inputs" tab to match their species of interest. The size of the farm is used to scale the productive biomass as well as the variable initial capital and operational costs. The discount rate (and all other model input rates) take the form of a decimal between 0 and 1 (e.g. '0.05' = 5%).
