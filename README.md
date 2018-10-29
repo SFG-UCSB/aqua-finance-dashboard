@@ -2,4 +2,4 @@ This dashboard was built to help visualize the magnitude and timeliness of expec
 
 ***
 
-<img src="Screenshots/fullDashboard.png" alt="Dashboard Full Capture" style = "align:middle; max-width:100%" > 
+<img src="dashboard/Screenshots/fullDashboard.png" alt="Dashboard Full Capture" style = "align:middle; max-width:100%" > 
