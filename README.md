@@ -2,4 +2,8 @@ This dashboard was built to help visualize the magnitude and timeliness of expec
 
 ***
 
+<<<<<<< HEAD:README.md
 ![alt text](https://github.com/SFG-UCSB/aqua-finance-dashboard/blob/master/dashboard/Screenshots/fullDashboard.PNG}) 
+=======
+<img src="dashboard/Screenshots/fullDashboard.png" alt="Dashboard Full Capture" style = "align:middle; max-width:100%" > 
+>>>>>>> cd73a0fece0e12f0a09a25a7102d590b9fe5c22d:README.md
