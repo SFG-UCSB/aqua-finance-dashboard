@@ -10,17 +10,18 @@ This dashboard app was built to help visualize the magnitude and timeliness of e
 
 This user reference guide will walk through the structure of the app, the underlying bio-economic model, and provide further detail on model inputs.   
 
-#### Core Inputs
+#### **Bioeconomic Model and Outputs Tab**
+
+#### User-Defined Farm Inputs
 
 On the "Model & Outputs" tab, the user is first asked to define four key model parameters:
 
 * the type of species to model
 * the farm size in hectares
-* an annual discount rate  to apply during the financial forecasting
+* the wholesale price in dollars per kilogram 
 * the time duration of the simulation in years
-
 <br>
 <center><img src="../Screenshots/coreInputs.PNG" style="max-width:85%"> </center>
 <br>
 
-Specific holotypes were chosen to serve as the model organism for each species type. They were *Rachycentron canadum* (cobia), *Mytilus edulis* (blue mussel), and *Saccharina latissima* (sugar kelp) for 'finfish', 'shellfish', and 'seaweed' respectively. While the model's default specifications were selected with these species in mind, users can revise internal model parameters on the "Additional User Inputs" tab to match their species of interest. The size of the farm is used to scale the productive biomass as well as the variable initial capital and operational costs. The discount rate (and all other model input rates) take the form of a decimal between 0 and 1 (e.g. '0.05' = 5%).
+Specific holotypes were chosen to serve as the model organism for each species type. They were *Rachycentron canadum* (cobia), *Mytilus edulis* (blue mussel), and *Saccharina latissima* (sugar kelp) for 'finfish', 'shellfish', and 'seaweed' respectively. While the model's default specifications were selected with these species in mind, users can revise internal model parameters on the **Additional User Inputs** tab to match their species of interest. The size of the farm is used to scale the productive biomass as well as the variable initial capital and operational costs. It is assumed that all product can enter the market at one time for a single wholsale, "farm-gate" price. Users can switch the selected species to reset the other core inputs to their defualt values. 

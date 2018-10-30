@@ -3,7 +3,7 @@
 
 
 dashboardPage(title = "Aquaculture Financial Tool", skin = "purple",
-              dashboardHeader(title = "Aquaculture Planning Financial Tool", titleWidth = 350),
+              dashboardHeader(title = "Aquaculture Planning Financial Tool", titleWidth = 400),
               #dashboardHeader(),
               #Sidebar tabs
               dashboardSidebar(sidebarMenu(
@@ -47,31 +47,12 @@ dashboardPage(title = "Aquaculture Financial Tool", skin = "purple",
                                            "Shellfish" = "sf",
                                            "Seaweed" = "sw"
                                          )
-                                       ) ,
-                                       numericInput("discount",
-                                                    "Discount Rate (% as decimal)",
-                                                    value = 0.05,
-                                                    min = 0,
-                                                    max = 1,
-                                                    step = 0.01)
-                                ),
-                                column(width = 6,
-                                       sliderInput(
-                                         "farm_size",
-                                         "Farm  Size (hectares)",
-                                         value = 20,
-                                         min = 5,
-                                         max = 100,
-                                         step = 5
                                        ),
-                                       sliderInput(
-                                         "time_horz",
-                                         "Time Horizon (years)",
-                                         min = 1,
-                                         max = 10,
-                                         value = 5,
-                                         step = 1
-                                       )
+                                       uiOutput("sales_priceWidget")
+                                                                       ),
+                                column(width = 6,
+                                       uiOutput("farm_sizeWidget"),
+                                       uiOutput("time_horzWidget")
                                 )
                             )
                           ),
@@ -137,10 +118,11 @@ dashboardPage(title = "Aquaculture Financial Tool", skin = "purple",
                       )
                     ),
                     fluidRow(
-                      box(width = 12, title = "Revenue",
+                      box(width = 12, title = "Financial",
                           solidHeader = TRUE,
-                          uiOutput("sales_priceWidget"),
-                          collapsible = T
+                          uiOutput("discountWidget"),
+                          collapsible = T,
+                          footer = "*e.g. 5% = 0.05"
                       )
                     ),
                     fluidRow(         

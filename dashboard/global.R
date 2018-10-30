@@ -52,6 +52,14 @@ annual_costs_defaults <- c(553625,151840,62628)
 #the number of timesteps in a year, defaults to 12 (monthly)
 model_timestep = 12
 
+#these defaults are the same across species type, but allows for the user to reset the simulation when switching species types
+
+farm_size_defaults <- c(20,20,20)
+time_horz_defaults <- c(5,5,5)
+discount_defaults <- c(0.05,0.05,0.05)
+
+
+
 
 
 

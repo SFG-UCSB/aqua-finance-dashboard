@@ -24,7 +24,7 @@ These variables are used to control the growth cycle as well as the amount of ha
 
 * Minimum Harvest Size- the threshold size for harvesting an individual. This size may be exceeded during a monthly timestep, but all surviving individuals will be harvested at their final size at the end of that month.
 
-* Monthly Growth Rate - the amount of additional biomass an organism gains over a month in the form of a decimal relative to its mass at the beginning of the timestep. The model allows for the input of multiple growth rates to simulate variation throughout the year. All rates must be separated by a comma and the total number inputted must be evenly divisible into 12 months. For example, if a user wanted to simulate growth that tapered to zero across a calendar year, they could input "0.3 , 0.2 , 0.1 , 0" (quotation marks added for clarity, see below for an example).
+* Monthly Growth Rate - the amount of additional biomass an organism gains over a month in the form of a decimal relative to its mass at the beginning of the timestep. The growth rate (and all other model input rates) take the form of a decimal between 0 and 1 (e.g. '0.05' = 5%). The model allows for the input of multiple growth rates to simulate variation throughout the year. The series of rates must be separated by a comma and the total number inputted must be evenly divisible into 12 months. For example, if a user wanted to simulate growth that tapered to zero across a calendar year, they could input "0.3 , 0.2 , 0.1 , 0" (quotation marks added for clarity, see below for an example).
 
 <center><img src="../Screenshots/multiGrowth.PNG" style="max-width:50%"> </center>
 
@@ -33,11 +33,11 @@ These variables are used to control the growth cycle as well as the amount of ha
   + survivors = individuals at stocking *x* *e*^((mortality rate *x* months since last stocking)^) 
 
 
-#### Revenue
+#### Financial
 
 The sole revenue generating process for the farm is assumed to be the wholesale of produced biomass.
 
-* Wholesale Price - the price at which all product is sold. The market is assumed to absorb all the product at a one time at a uniform cost point.  
+* Discount Rate - the annual rate used in the financial analysis to decrease the magnitude of future costs and revenues relative to those closer to the present. The user is allowed to choose between a handful of common discount rates ranging from zero to ten percent (0 - 0.1).
 
 #### Initial Investments
 

@@ -1,20 +1,49 @@
 shinyServer(function(input, output) {
   
-#The species_index() is a reactive function that forms the backbone of the server. It allows for the dynamic switching between species-type defaults based on which species the user has selected on the original app ladning page. It passes an index to the functions that render the widgets which then pick their starting values from lists that are indexed according to the pattern dictated in species_index. Note: ff = finfish, sf = shellfish, sw = seaweed (algae)  
+  #The species_index() is a reactive function that forms the backbone of the server. It allows for the dynamic switching between species-type defaults based on which species the user has selected on the original app ladning page. It passes an index to the functions that render the widgets which then pick their starting values from lists that are indexed according to the pattern dictated in species_index. Note: ff = finfish, sf = shellfish, sw = seaweed (algae)  
   
   species_index <- reactive({
     
-     switch(input$species,
+    switch(input$species,
            "ff" = 1,
            "sf" = 2,
            "sw" = 3
-          )
+    )
   })
   
   #The following code chunks call to renderUI() to dynamically create widgets that populate the app. 
+  output$discountWidget <- renderUI({
+    selectInput("discount",
+                "Annual Discount Rate* (% as decimal)",
+                choices = c(0,0.03,0.05,0.08,0.10),
+                selected = discount_defaults[species_index()])
+  })
   
-     output$prod_unit_densWidget <- renderUI({
-       numericInput("prod_unit_dens",
+  output$farm_sizeWidget <- renderUI({
+    sliderInput(
+      "farm_size",
+      "Farm  Size (hectares)",
+      value = farm_size_defaults[species_index()],
+      min = 5,
+      max = 100,
+      step = 5
+    )
+  })
+  
+  output$time_horzWidget <- renderUI({
+    sliderInput(
+      "time_horz",
+      "Time Horizon (years)",
+      min = 1,
+      max = 10,
+      value = time_horz_defaults[species_index()],
+      step = 1
+    )
+  })
+  
+  
+  output$prod_unit_densWidget <- renderUI({
+    numericInput("prod_unit_dens",
                  "Production Units* (per hectare)",
                  value = prod_unit_dens_defaults[species_index()],
                  min = 1,
@@ -136,17 +165,17 @@ shinyServer(function(input, output) {
       step = 500
     )
   })
-
   
-
- #The run_model() function is essentially a reactive wrapper for the production_model() function defined in the global.R script.  
+  
+  
+  #The run_model() function is essentially a reactive wrapper for the production_model() function defined in the global.R script.  
   
   
   run_model <- reactive({
     
     results <- production_model(
       species = input$species,
-      discount = input$discount,
+      discount = as.numeric(input$discount),
       farm_size = input$farm_size,
       time_horz = input$time_horz,
       unit_area = input$prod_unit_dens,
@@ -169,9 +198,12 @@ shinyServer(function(input, output) {
     return(results)
   })
   
-#Use lapply to pass a list of the widgets to the outputOptions()  function which allows the suspendWhenHidden argument (default = T) to be set to false. This was added to circumvent the native dashboard reactive behavior during which the widgets (and graphical outputs that depending on their values) only would update in response to the species choice selection when that tab was navigated to. Now, widgets will update any time the app notices that the species selectiion has been changed.
+  #Use lapply to pass a list of the widgets to the outputOptions()  function which allows the suspendWhenHidden argument (default = T) to be set to false. This was added to circumvent the native dashboard reactive behavior during which the widgets (and graphical outputs that depending on their values) only would update in response to the species choice selection when that tab was navigated to. Now, widgets will update any time the app notices that the species selectiion has been changed.
   
   lapply(c(
+    "discountWidget",
+    "farm_sizeWidget",
+    "time_horzWidget",
     "prod_unit_densWidget",
     "stocking_densWidget",
     "start_sizeWidget",
@@ -190,7 +222,7 @@ shinyServer(function(input, output) {
     "annual_costsWidget"
   ),
   function(x)outputOptions(output, x, suspendWhenHidden = FALSE))
-
+  
   output$CFPlot <- renderPlot({
     
     req(input$time_window)
@@ -205,12 +237,12 @@ shinyServer(function(input, output) {
                           #colorbrewer
                           #c("#e6ab02","#e7298a","#1b9e77","#66a61e","#7570b3", "#d95f02")
                           #paul tol
-                        rev(c("#CC6677","#117733","#332288", "#DDCC77","#88CCEE","#9129c5"))
+                          rev(c("#CC6677","#117733","#332288", "#DDCC77","#88CCEE","#9129c5"))
                         #rainbow_hcl from Learning R  
                         #rainbow_hcl(6, start = 30, end = 270)
-                          #colorbrewer2
-                         #rev(brewer.pal(6, "Paired"))
-                        )+
+                        #colorbrewer2
+                        #rev(brewer.pal(6, "Paired"))
+      )+
       theme(legend.position = "right")+
       NULL
   }
@@ -235,7 +267,7 @@ shinyServer(function(input, output) {
       labs(x = "Year", y = "USD Millions")+
       NULL
   })
-
+  
   #  output$NPVPlot <- renderPlot({
   #     ggplot(run_model()$results, aes(x = Timesteps, y = NPV / 1000000)) +
   #      geom_hline(yintercept = 0, linetype = 5) +
@@ -262,31 +294,31 @@ shinyServer(function(input, output) {
   })
   
   output$profit_box <- renderValueBox({
-      
+    
     valueBox(
       value = paste0("$",prettyNum(round(run_model()$profit,-3), big.mark = ",")), 
       subtitle = "Avgerage Annual Profit", 
       icon = icon("bar-chart"),
       color = ifelse(run_model()$profit > 0, "olive","red")
-      )
+    )
   })
   
   output$breakeven_box <- renderValueBox({
     if(run_model()$isProfitable){
       valueBox(
-      value = paste(run_model()$breakeven,run_model()$phrase), 
-      subtitle = "Payback Period", 
-      color = "olive",
-      icon = icon("calendar"))
+        value = paste(run_model()$breakeven,run_model()$phrase), 
+        subtitle = "Payback Period", 
+        color = "olive",
+        icon = icon("calendar"))
     }
     else{
       valueBox(
-      value = "Not Profitable", 
-      subtitle = "over Time Horizon", 
-      color = "red",
-      icon = icon("calendar"))
+        value = "Not Profitable", 
+        subtitle = "over Time Horizon", 
+        color = "red",
+        icon = icon("calendar"))
     }
-    })
+  })
   
   output$production_box <- renderValueBox({
     valueBox(
